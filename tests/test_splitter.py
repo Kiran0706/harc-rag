@@ -24,3 +24,6 @@ def test_splitter():
     chunks = splitter.split(document)
 
     assert len(chunks) == 3
+    assert chunks[0].chunk_id == 0
+    assert chunks[1].chunk_id == 1
+    assert chunks[2].chunk_id == 2
