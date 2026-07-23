@@ -41,4 +41,9 @@ class DocumentLoader:
             file_path=path,
             text=text,
             page_count=len(reader.pages),
+            metadata={
+                "source": path.name,
+                "loader": "pypdf",
+                "language": "unknown",
+            },
         )
