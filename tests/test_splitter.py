@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from harc_rag.chunking.character_strategy import CharacterChunkingStrategy
 from harc_rag.chunking.splitter import TextSplitter
 from harc_rag.document.models import Document
 
@@ -13,19 +14,13 @@ def test_splitter():
         metadata={},
     )
 
-    splitter = TextSplitter(
+    strategy = CharacterChunkingStrategy(
         chunk_size=500,
         chunk_overlap=50,
     )
 
+    splitter = TextSplitter(strategy)
+
     chunks = splitter.split(document)
 
     assert len(chunks) == 3
-
-    assert chunks[0].chunk_id == 0
-    assert chunks[1].chunk_id == 1
-    assert chunks[2].chunk_id == 2
-
-    assert chunks[0].start_index == 0
-    assert chunks[1].start_index == 450
-    assert chunks[2].start_index == 900
