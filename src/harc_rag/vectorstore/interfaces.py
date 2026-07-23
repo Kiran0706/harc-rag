@@ -8,7 +8,7 @@ class VectorStore(ABC):
 
     @abstractmethod
     def add(self, embeddings: list[Embedding]) -> None:
-        pass
+        """Add embeddings to the vector store."""
 
     @abstractmethod
     def search(
@@ -16,12 +16,12 @@ class VectorStore(ABC):
         query_vector: list[float],
         k: int = 5,
     ) -> list[SearchResult]:
-        pass
+        """Return the top-k most similar embeddings."""
 
     @abstractmethod
     def save(self, path: str) -> None:
-        pass
+        """Save the index."""
 
     @abstractmethod
     def load(self, path: str) -> None:
-        pass
+        """Load the index."""
