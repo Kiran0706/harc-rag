@@ -1,14 +1,18 @@
-from harc_rag.retrieval.dense_retriever import DenseRetriever
+from harc_rag.retrieval.config import RetrievalConfig
 
 
 class RetrievalService:
 
-    def __init__(self, retriever: DenseRetriever):
-        self.retriever = retriever
-
-    def retrieve(
+    def __init__(
         self,
-        query: str,
-        k: int = 5,
+        retriever,
+        config: RetrievalConfig,
     ):
-        return self.retriever.retrieve(query, k)
+        self.retriever = retriever
+        self.config = config
+
+    def retrieve(self, query: str):
+        return self.retriever.retrieve(
+            query=query,
+            k=self.config.top_k,
+        )
