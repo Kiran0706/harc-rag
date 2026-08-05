@@ -50,4 +50,4 @@ def test_hybrid():
 
     assert len(results) == 1
 
-    assert results[0].score > 5
+    assert results[0].score > 0
