@@ -1,4 +1,7 @@
-from harc_rag.generation.generator import Generator
+from harc_rag.generation.generator import RAGGenerator
+from harc_rag.generation.service import GenerationService
+from harc_rag.generation.prompt_builder import PromptBuilder
+
 from harc_rag.routing.router import AdaptiveRouter
 from harc_rag.uncertainty.estimator import JointEstimator
 from harc_rag.verification.verifier import LocalVerifier
@@ -13,62 +16,63 @@ class HARCRAGPipeline:
 
         self.retriever = retriever
 
-        self.generator = Generator()
+        self.prompt_builder = PromptBuilder()
+
+        self.generator = RAGGenerator(
+            GenerationService()
+        )
 
         self.estimator = JointEstimator()
 
         self.router = AdaptiveRouter()
 
         self.verifier = LocalVerifier()
-        def answer(
+
+    def answer(
         self,
         question: str,
     ) -> str:
 
+        # Retrieve relevant chunks
         retrieval_results = self.retriever.retrieve(question)
 
-        context = "\n".join(
-
-            result.chunk.text
-
+        chunks = [
+            result.chunk
             for result in retrieval_results
+        ]
 
+        context = "\n".join(
+            chunk.text
+            for chunk in chunks
         )
 
-        answer = self.generator.generate(
-
-            question,
-
-            context,
-
+        # Build prompt
+        prompt = self.prompt_builder.build(
+            query=question,
+            chunks=chunks,
         )
 
+        # Generate answer
+        answer = self.generator.generate(prompt)
+
+        # Estimate uncertainty
         uncertainty = self.estimator.estimate(
-
             retrieval_results,
-
             answer,
-
             context,
-
         )
 
+        # Decide whether verification is required
         decision = self.router.route(
-
             uncertainty.score
-
         )
 
         if decision.should_verify:
 
             verification = self.verifier.verify(
-
                 question,
-
                 answer,
-
                 context,
-
             )
 
             return verification.verified_answer

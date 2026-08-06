@@ -1,5 +1,5 @@
 import ollama
-
+from harc_rag.llm.ollama_client import OllamaClient
 
 class OllamaClient:
 
