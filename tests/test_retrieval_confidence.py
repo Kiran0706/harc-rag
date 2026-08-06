@@ -1,3 +1,4 @@
+import pytest
 from harc_rag.chunking.models import Chunk
 from harc_rag.retrieval.models import RetrievalResult
 from harc_rag.uncertainty.retrieval_confidence import (
@@ -36,4 +37,4 @@ def test_retrieval_confidence():
 
     confidence = estimator.estimate(results)
 
-    assert confidence == 0.85
+    assert confidence == pytest.approx(0.85)
