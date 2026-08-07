@@ -67,8 +67,10 @@ class HARCRAGPipeline:
 
         # Decide whether verification is required
         decision = self.router.route(
-            uncertainty.score,
-            question,
+            confidence=uncertainty.score,
+            question=question,
+            answer=answer,
+            context=context,
         )
 
         if decision.should_verify:
