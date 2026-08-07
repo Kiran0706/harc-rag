@@ -1,4 +1,6 @@
 from harc_rag.generation.generator import RAGGenerator
+from harc_rag.generation.interfaces import LLM
+from harc_rag.generation.ollama import OllamaLLM
 from harc_rag.generation.service import GenerationService
 from harc_rag.generation.prompt_builder import PromptBuilder
 
@@ -12,6 +14,7 @@ class HARCRAGPipeline:
     def __init__(
         self,
         retriever,
+        llm: LLM | None = None,
     ):
 
         self.retriever = retriever
@@ -19,7 +22,7 @@ class HARCRAGPipeline:
         self.prompt_builder = PromptBuilder()
 
         self.generator = RAGGenerator(
-            GenerationService()
+            GenerationService(llm or OllamaLLM())
         )
 
         self.estimator = JointEstimator()

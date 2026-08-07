@@ -1,4 +1,13 @@
+from harc_rag.uncertainty.semantic_similarity import (
+    SemanticSimilarity,
+)
+
+
 class EvidenceConfidenceEstimator:
+
+    def __init__(self):
+
+        self.semantic = SemanticSimilarity()
 
     def estimate(
         self,
@@ -6,22 +15,7 @@ class EvidenceConfidenceEstimator:
         context: str,
     ) -> float:
 
-        if not answer.strip() or not context.strip():
-            return 0.0
-
-        answer_words = set(
-            answer.lower().split()
-        )
-
-        context_words = set(
-            context.lower().split()
-        )
-
-        overlap = answer_words.intersection(
-            context_words
-        )
-
-        return len(overlap) / max(
-            len(answer_words),
-            1,
+        return self.semantic.similarity(
+            answer,
+            context,
         )
