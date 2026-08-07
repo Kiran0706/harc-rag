@@ -15,6 +15,10 @@ from harc_rag.uncertainty.evidence_confidence import (
     EvidenceConfidenceEstimator,
 )
 
+from harc_rag.uncertainty.weighting import (
+    DynamicWeightCalculator,
+)
+
 
 class JointEstimator:
 
@@ -23,6 +27,7 @@ class JointEstimator:
         self.retrieval = RetrievalConfidenceEstimator()
         self.generation = GenerationConfidenceEstimator()
         self.evidence = EvidenceConfidenceEstimator()
+        self.weights = DynamicWeightCalculator()
 
     def estimate(
         self,
@@ -44,10 +49,14 @@ class JointEstimator:
             context,
         )
 
+        weights = self.weights.calculate(
+            retrieval
+        )
+
         joint = (
-            0.40 * retrieval
-            + 0.30 * generation
-            + 0.30 * evidence
+            weights.retrieval * retrieval
+            + weights.generation * generation
+            + weights.evidence * evidence
         )
 
         confidence = ConfidenceScore(
