@@ -1,15 +1,7 @@
-from pydantic import BaseModel
 from fastapi import FastAPI
 
-from harc_rag.api.routes import router
-
-class ChatRequest(BaseModel):
-    question: str
-
-
-class ChatResponse(BaseModel):
-    answer: str
-
+from harc_rag.api.routes import router, set_pipeline
+from harc_rag.pipeline.pipeline import HARCRAGPipeline
 
 
 app = FastAPI(
@@ -17,6 +9,16 @@ app = FastAPI(
     description="Hallucination-Aware Retrieval-Augmented Generation API",
     version="0.1.0",
 )
+
+
+# Create your existing retriever here.
+#
+# Example:
+#
+# retriever = YourExistingRetriever(...)
+#
+# pipeline = HARCRAGPipeline(retriever)
+# set_pipeline(pipeline)
 
 
 app.include_router(router)
